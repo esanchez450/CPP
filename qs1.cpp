@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <chrono>
+#include <chrono> // used to time code
 using namespace std;
 
 /**
@@ -64,8 +64,9 @@ int solution(vector<int> &A) {
     duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "duration of copying to new vector: " << duration  << " milliseconds" << endl;
 
-    // sort from min to max, easier to sort, not the fastest in time and efficiency, super duper ooper sssssllllllooooooowwwwww
-    //  start = chrono::steady_clock::now();
+    // sort from min to max, easier to sort, not the fastest in time and efficiency\
+    // O(n^2) (super duper ooper sssssllllllooooooowwwwww)
+    // start = chrono::steady_clock::now();
     // for (int j = 0; j < B.size(); j++) {
     //     for(int i = 0; i < B.size() - 1 - j ; i++) {
     //         if (B.at(i) > B.at(i+1)) {
@@ -80,6 +81,7 @@ int solution(vector<int> &A) {
     // cout << "duration of sorting: " << duration  << " seconds" << endl;
 
     // quicksort algorithm
+    // O(n log n) really quick
     start = chrono::steady_clock::now();
     quicksort(B, 0, B.size()-1);
     end = chrono::steady_clock::now();
