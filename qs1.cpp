@@ -19,7 +19,7 @@ using namespace std;
 
 void print(vector<int> &A) { // was too lazy to keep writing for loops for testing lol
     for (int i = 0; i < A.size()-1; i++) {
-        cout << A.at(i) << "," << endl;
+        cout << A.at(i) << ","; // << endl;
     }   cout << A.at(A.size()-1) << endl;
 }
 
@@ -51,11 +51,11 @@ void quicksort(vector<int> &v, int s, int e){
 }
 
 int solution(vector<int> &A) {
-    int temp, sol = 0, duration;
+    int temp, sol, duration;
 
+    // create new vector to modify order, in the case we do not want to modify original vector A, 
+    // so that the vector can be sorted, although more resource is used
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
-    // create new vector to modify order, leave original vector as is
-    // so that the vector can be sorted
     vector<int> B;
     for ( int i = 0; i < A.size(); i++) {
         B.push_back(A.at(i));
@@ -64,7 +64,7 @@ int solution(vector<int> &A) {
     duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "duration of copying to new vector: " << duration  << " milliseconds" << endl;
 
-    // sort from min to max, easier to sort, not the fastest in time and efficiency\
+    // sort from min to max, easier to sort, not the fastest in time and efficiency
     // O(n^2) (super duper ooper sssssllllllooooooowwwwww)
     // start = chrono::steady_clock::now();
     // for (int j = 0; j < B.size(); j++) {
@@ -80,37 +80,36 @@ int solution(vector<int> &A) {
     // duration = chrono::duration_cast<chrono::seconds>(end - start).count();
     // cout << "duration of sorting: " << duration  << " seconds" << endl;
 
-    // quicksort algorithm
-    // O(n log n) really quick
+    // quicksort algorithm , O(n log n) extremely quick
     start = chrono::steady_clock::now();
     quicksort(B, 0, B.size()-1);
     end = chrono::steady_clock::now();
     duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "duration of sorting: " << duration  << " milliseconds" << endl;
 
-    start = chrono::steady_clock::now();
     // finding the smallest positive integer (greater than 0) that does not occur in vector
     // breaks out the loop if sol is found
-    sol = B.at(B.size()-1)+1;
-    for(int i = 0; i < B.size()-1; i++) {
-        if(B.at(i) < B.at(i+1) && B.at(i)+1 != B.at(i+1)) {
+    start = chrono::steady_clock::now();
+    sol = B.at(B.size()-1)+1;  // add 1 to the last element in the sequence
+    for(int i = 0; i < B.size()-1; i++) {  // O(n) Linear Search
+        if(B.at(i) < B.at(i+1) && B.at(i)+1 != B.at(i+1)) { 
             sol = B.at(i)+1; break;
         }
     }
-     end = chrono::steady_clock::now();
+    end = chrono::steady_clock::now();
     duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "duration of finding smallest int not found in vector: " << duration  << " milliseconds" << endl;
 
-    //if solution not found, solution = 1
-    if (sol == 0 || sol < 0) sol = 1;
+    // if solution not found with negative numbers in the sequence, solution = 1
+    if (sol <= 0) sol = 1;
 
-     start = chrono::steady_clock::now();
-    // not needed, just to view at the modified vector B
+    // not needed, just to view the modified vector B
+    start = chrono::steady_clock::now();
     A.clear();
     for ( int i = 0; i < B.size(); i++) {
         A.push_back(B.at(i));
     }
-     end = chrono::steady_clock::now();
+    end = chrono::steady_clock::now();
     duration = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     cout << "duration of repopulating vector: " << duration  << " milliseconds" << endl;
 
@@ -123,9 +122,8 @@ int main() {
     srand(time(NULL));
     vector<int> vec;
     
-
-    chrono::steady_clock::time_point start = chrono::steady_clock::now();
     // populate vector
+    chrono::steady_clock::time_point start = chrono::steady_clock::now();
     for (int i = 0; i < 100000; i++) 
         vec.push_back(rand() % 2000000);
 
@@ -137,30 +135,37 @@ int main() {
     solution(vec);  // solution
     // print(vec);     // after
 
+    /////////// test values for edge cases ///////////
+
     // if all numbers are positive and no solution found
-    // cout << endl;
-    // vector<int> v;
-    // v.push_back(1); v.push_back(2);v.push_back(3);
-    // print(v);
-    // solution(v);
-    // print(v);
+    cout << endl;
+    vector<int> v;
+    v.push_back(3); v.push_back(1); v.push_back(2);
+    print(v);
+    solution(v);
+    print(v);
 
-    // // if all numbers are negative and no solution found
-    // cout << endl;
-    // vector<int> v1;
-    // v1.push_back(-1);v1.push_back(-3);
-    // print(v1);
-    // solution(v1);
-    // print(v1);
+    // if all numbers are negative and no solution found
+    cout << endl;
+    vector<int> v1;
+    v1.push_back(-1); v1.push_back(-3);
+    print(v1);
+    solution(v1);
+    print(v1);
 
-    // // if solution is 1
-    // cout << endl;
-    // vector<int> v2;
+    // if solution is 1
+    cout << endl;
+    int arr[] = {-1,7,-2,0,4,3,-3,5,2,-3};
+    int arrSize = sizeof(arr)/sizeof(arr[0]);
+    vector<int> v2;
+    for (int i = 0; i < arrSize; i++) {
+        v2.push_back(arr[i]);
+    }
     // v2.push_back(-1); v2.push_back(7); v2.push_back(-2); v2.push_back(0); v2.push_back(4);
     // v2.push_back(3); v2.push_back(-3); v2.push_back(5); v2.push_back(2); v2.push_back(-3);
-    // print(v2);
-    // solution(v2);
-    // print(v2);
+    print(v2);
+    solution(v2);
+    print(v2);
 
     return 0;
 }
